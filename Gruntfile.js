@@ -7,6 +7,7 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
+
 module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
@@ -27,6 +28,7 @@ module.exports = function (grunt) {
 
   // Define the configuration for all the tasks
   grunt.initConfig({
+    aws: grunt.file.readJSON('aws-keys.json'),
 
     // Project settings
     yeoman: appConfig,
@@ -224,7 +226,7 @@ module.exports = function (grunt) {
         src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         ignorePath: /(\.\.\/){1,2}bower_components\//
       }
-    }, 
+    },
 
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
@@ -394,6 +396,66 @@ module.exports = function (grunt) {
       }
     },
 
+    invalidate: {
+      options: {
+        key: '<%= aws.AWSAccessKeyId %>',
+        secret: '<%= aws.AWSSecretKey %>',
+        distribution: 'E215059KCYTMAW'
+      },
+      production: {
+        files: [{
+          expand: true,
+          cwd: './dist/',
+          src: ['**/*'],
+          filter: 'isFile',
+          dest: ''
+        }]
+      }
+    },
+
+
+    // Deploy to s3
+    s3Deploy: {
+      options: {
+        accessKeyId: '<%= aws.AWSAccessKeyId %>',
+        secretAccessKey: '<%= aws.AWSSecretKey %>',
+        region: 'us-west-1',
+        uploadConcurrency: 5, // 5 simultaneous uploads
+        downloadConcurrency: 5 // 5 simultaneous downloads
+      },
+      staging: {
+        options: {
+          bucket: 'staging.bo.gg',
+          differential: true, // Only uploads the files that have changed
+          gzipRename: 'ext' // when uploading a gz file, keep the original extension
+        },
+        files: [
+          {dest: 'app/', cwd: 'backup/staging/', action: 'download'},
+          {src: 'app/', cwd: 'copy/', action: 'copy'},
+          {expand: true, cwd: 'dist/staging/scripts/', src: ['**'], dest: 'app/scripts/'},
+          {expand: true, cwd: 'dist/staging/styles/', src: ['**'], dest: 'app/styles/'},
+          {dest: 'src/app', action: 'delete'},
+        ]
+      },
+      production: {
+        options: {
+          bucket: 'bo.gg',
+        },
+        files: [
+          {expand: true, cwd: 'dist/', src: ['**'], dest: '/'},
+        ]
+      },
+      cleanprod: {
+        options: {
+          bucket: 'bo.gg',
+          debug: false
+        },
+        files: [
+          {dest: '/', action: 'delete'},
+        ]
+      }
+    },
+
     // Replace Google CDN references
     cdnify: {
       dist: {
@@ -506,6 +568,19 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin'
   ]);
+
+  grunt.loadNpmTasks('grunt-aws-s3');
+  grunt.loadNpmTasks('grunt-invalidate-cloudfront');
+
+  grunt.task.renameTask('aws_s3', 's3Deploy');
+  grunt.task.renameTask('invalidate_cloudfront', 'invalidate');
+
+  grunt.registerTask('deploy', [
+    's3Deploy:cleanprod',
+    's3Deploy:production',
+    'invalidate:production'
+  ]);
+
 
   grunt.registerTask('default', [
     'newer:jshint',
