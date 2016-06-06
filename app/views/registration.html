@@ -1,1 +1,106 @@
-<p>This is the registration view.</p>
+<div class="container">
+  <h2>Registration</h2>
+
+  <form role="form" ng-submit="register()" data-toggle="validator">
+    <fieldset class="form-group">
+      <label for="username">User Name</label>
+      <input type="text" ng-model="payload.username" class="form-control" id="username" placeholder="Choose a username" required="">
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <fieldset class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" ng-model="payload.email" class="form-control" id="email" placeholder="Enter email" required="">
+      <small class="text-muted">Used for account restoration.</small>
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <fieldset class="form-group">
+      <label for="password">Password</label>
+      <input type="password" ng-model="payload.password" class="form-control" id="password" placeholder="Password" required="">
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <fieldset class="form-group">
+      <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required="">
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <h3>Weight Loss</h3>
+    <fieldset class="form-group">
+      <label for="weekGoal">How many pounds would you like to lose per week?</label>
+      <input type="text" ng-model="weekGoal" ng-change="calcGoal()" class="form-control" id="weekGoal" placeholder="Example: 0.5 or 2.0" required="">
+      <small class="text-muted">This is typically between 0.5 and 2.0 pounds per week. Attempting to lose more than 2 pounds per week is generally not recommended and could have a revere effect.</small>
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <h3>Goal Factors</h3>
+    <p>The following information is only used to calculator your calorie goals.</p>
+
+    <fieldset class="form-group">
+      <label for="gender">Gender</label>
+      <select class="form-control" ng-model="payload.gender" id="gender" required="">
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+      </select>
+      <small class="text-muted">Only used to calculate calorie goals.</small>
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <fieldset class="form-group">
+      <input type="text" class="form-control" ng-model="payload.bogger.birthdate" id="birthdate" placeholder="YYYY-MM-DD" required="" data-mask="9999-99-99">
+      <small class="text-muted">Enter in format "YYYY-MM-DD".</small>
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+
+    <!--
+    <fieldset class="form-group">
+      <label for="activityLevel">Activity Level</label>
+      <div class="input-group">
+        <div class="input-group-btn">
+        <button class="btn btn-default" width="20%">
+          <img src="/images/activity/sedentary.svg" width="100%" />
+        </button>
+        <button class="btn btn-default" width="20%">
+          <img src="/images/activity/lightly-active.svg" width="100%" />
+        </button>
+        <button class="btn btn-default" width="20%">
+          <img src="/images/activity/moderately-active.svg" width="100%" />
+        </button>
+        <button class="btn btn-default" width="20%">
+          <img src="/images/activity/very-active.svg" width="100%" />
+        </button>
+        <button class="btn btn-default" width="20%">
+          <img src="/images/activity/extra-active.svg" width="100%" />
+        </button>
+      </div>
+      </div>
+      <select class="form-control" ng-model="activityLevel" id="activityLevel">
+        <option value="1.2">Sedentary</option>
+        <option value="1.375">Lightly Active</option>
+        <option value="1.55">Moderately Active</option>
+        <option value="1.725">Very Active</option>
+        <option value="1.9">Extra Active</option>
+      </select>
+      <small class="text-muted">See <a href="https://en.wikipedia.org/wiki/Physical_activity_level">https://en.wikipedia.org/wiki/Physical_activity_level</a> for descriptions of these terms.</small>
+    </fieldset>
+    -->
+    <fieldset class="form-group">
+      <label for="activityLevel">Activity Level</label>
+      <select class="form-control" ng-model="activityLevel" id="activityLevel" required="">
+        <option value="1.2">Sedentary</option>
+        <option value="1.375">Lightly Active</option>
+        <option value="1.55">Moderately Active</option>
+        <option value="1.725">Very Active</option>
+        <option value="1.9">Extra Active</option>
+      </select>
+      <small class="text-muted">See <a href="https://en.wikipedia.org/wiki/Physical_activity_level">https://en.wikipedia.org/wiki/Physical_activity_level</a> for descriptions of these terms.</small>
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <fieldset class="form-group">
+      <label for="height">Height (in inches)</label>
+      <input type="text" ng-model="payload.height" class="form-control" id="height" placeholder="Example: 72" required="">
+      <small class="text-muted help-block with-errors">Sorry, grab a calculator.</small>
+    </fieldset>
+    <fieldset class="form-group">
+      <label for="weight">Weight (in pounds)</label>
+      <input type="text" ng-model="payload.weight" class="form-control" id="weight" placeholder="Example: 180" required="">
+      <small class="text-muted help-block with-errors"></small>
+    </fieldset>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
