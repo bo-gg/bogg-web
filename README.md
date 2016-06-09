@@ -1,11 +1,11 @@
-# bogg-web
+###Getting Started###
 
-Web interface for Bo.gg
+There are two methods for getting started with this repo.
 
-## Build & development
+####Familiar with Git?#####
+Checkout this repo, install dependencies, then start the gulp process with the following:
 
-Run `grunt` for building and `grunt serve` for preview.
-
-## Testing
-
-Running `grunt test` will run the unit tests with karma.
+```
+	> npm install
+	> npm start
+```
